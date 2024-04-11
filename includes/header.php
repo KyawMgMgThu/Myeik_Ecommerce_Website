@@ -1,12 +1,25 @@
 <?php
 session_start();
 define("APPURL", "http://localhost:8000/");
+
+define("IMGURLCATEGORY", "http://localhost/freshcery/admin-panel/categories-admins/img_category");
+define("IMGURLPRODUCT", "http://localhost/freshcery/admin-panel/products-admins/img_product");
+
+require dirname(dirname(__FILE__)) . "/config/config.php";
+
+
+if (isset($_SESSION['user_id'])) {
+    $cart = $conn->query("SELECT COUNT(*) as num_products FROM cart WHERE user_id='$_SESSION[user_id]'");
+    $cart->execute();
+
+    $num = $cart->fetch(PDO::FETCH_OBJ);
+}
 ?>
 <!DOCTYPE html>
 <html>
 
 <head>
-    <title>Freshcery | Groceries Organic Store</title>
+    <title>Myeik Freshcery | Groceries Organic Store</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">

@@ -1,3 +1,5 @@
+<?php require "../includes/header.php"; ?>
+<?php require "../config/config.php"; ?>
 <?php
 
 // if(!isset($_SESSION['username'])) {
@@ -5,9 +7,6 @@
 //     echo "<script> window.location.href='".APPURL."'; </script>";
 
 // }
-
-require "../includes/header.php";
-require "../config/config.php";
 
 if (isset($_POST['submit'])) {
 
@@ -19,26 +18,19 @@ if (isset($_POST['submit'])) {
     $pro_subtotal = $_POST['pro_subtotal'];
     $user_id = $_POST['user_id'];
 
+    $insert = $conn->prepare("INSERT INTO cart (pro_id, pro_title, pro_image, pro_price,
+        pro_qty, pro_subtotal, user_id) VALUES (:pro_id, :pro_title, :pro_image, :pro_price, :pro_qty, :pro_subtotal, :user_id)");
 
-    $insert = $conn->prepare("INSERT INTO cart (pro_id, pro_title, pro_image, pro_price, pro_qty, pro_subtotal, user_id) 
-                              VALUES (:pro_id, :pro_title, :pro_image, :pro_price, :pro_qty, :pro_subtotal, :user_id)");
-    $insert->bindParam(":pro_id", $pro_id);
-    $insert->bindParam(":pro_title", $pro_title);
-    $insert->bindParam(":pro_image", $pro_image);
-    $insert->bindParam(":pro_price", $pro_price);
-    $insert->bindParam(":pro_qty", $pro_qty);
-    $insert->bindParam(":pro_subtotal", $pro_subtotal);
-    $insert->bindParam(":user_id", $user_id);
-
-
-    if ($insert->execute()) {
-        echo "<script>alert('Added cart successful')</script>";
-        exit();
-    } else {
-        echo "<script>alert('Error Added cart')</script>";
-    }
+    $insert->execute([
+        ':pro_id' => $pro_id,
+        ':pro_title' => $pro_title,
+        ':pro_image' => $pro_image,
+        ':pro_price' => $pro_price,
+        ':pro_qty' => $pro_qty,
+        ':pro_subtotal' => $pro_subtotal,
+        ':user_id' => $user_id,
+    ]);
 }
-
 
 if (isset($_GET['id'])) {
 
@@ -52,7 +44,7 @@ if (isset($_GET['id'])) {
     //relatedproducts
 
     $relatedProducts = $conn->query("SELECT * FROM products WHERE status = 1 AND
-        id != '$id'");
+        category_id = '$product->category_id' AND id != '$id'");
 
     $relatedProducts->execute();
 
@@ -91,7 +83,7 @@ if (isset($_GET['id'])) {
                 <div class="col-sm-6">
                     <div class="slider-zoom">
                         <a href="<?php echo APPURL; ?>/assets/img/<?php echo $product->image; ?>" class="cloud-zoom" rel="transparentImage: 'data:image/gif;base64,R0lGODlhAQABAID/AMDAwAAAACH5BAEAAAAALAAAAAABAAEAAAICRAEAOw==', useWrapper: false, showTitle: false, zoomWidth:'500', zoomHeight:'500', adjustY:0, adjustX:10" id="cloudZoom">
-                            <img alt="Detail Zoom thumbs image" src="<?php echo APPURL; ?>assets/img/<?php echo $product->image; ?>" style="width: 100%;">
+                            <img alt="Detail Zoom thumbs image" src="<?php echo APPURL; ?>/assets/img/<?php echo $product->image; ?>" style="width: 100%;">
                         </a>
                     </div>
                 </div>
@@ -116,7 +108,7 @@ if (isset($_GET['id'])) {
                     <form method="POST" id="form-data">
                         <div class="row">
                             <div class="col-sm-5">
-                                <input class="form-control" disabled type="text" name="pro_title" value="<?php echo $product->title; ?>">
+                                <input class="form-control" type="hidden" name="pro_title" value="<?php echo $product->title; ?>">
                             </div>
                         </div>
                         <div class="row">
@@ -139,7 +131,7 @@ if (isset($_GET['id'])) {
                                 <input class="form-control" type="hidden" name="pro_id" value="<?php echo $product->id; ?>">
                             </div>
                         </div>
-                        <div class="row mb-1">
+                        <div class="row">
                             <div class="col-sm-5">
                                 <input class="pro_qty form-control" type="number" min="1" data-bts-button-down-class="btn btn-primary" data-bts-button-up-class="btn btn-primary" value="<?php echo $product->quantity; ?>" name="pro_qty">
                             </div>
@@ -147,7 +139,7 @@ if (isset($_GET['id'])) {
                         </div>
                         <div class="row">
                             <div class="col-sm-5">
-                                <input class="subtotal_price form-control" type="hidden" name="pro_subtotal" value=" <?php echo $product->price * $product->quantity; ?>">
+                                <input class="subtotal_price form-control" type="hidden" name="pro_subtotal" value="<?php echo $product->price * $product->quantity; ?>">
                             </div>
                         </div>
                         <?php if (isset($_SESSION['username'])) : ?>
@@ -198,11 +190,11 @@ if (isset($_GET['id'])) {
                                     </div>
                                     <div class="card-body">
                                         <h4 class="card-title">
-                                            <a href="detail-product.php"><?php echo $products->title; ?></a>
+                                            <a href="detail-product.html"><?php echo $products->title; ?></a>
                                         </h4>
                                         <div class="card-price">
                                             <!-- <span class="discount">Rp. 300.000</span> -->
-                                            <span class="reguler"><?php echo $products->price; ?>KS</span>
+                                            <span class="reguler">$ <?php echo $products->price; ?></span>
                                         </div>
                                         <a href="<?php echo APPURL; ?>/products/detail-product.php?id=<?php echo $products->id; ?>" class="btn btn-block btn-primary">
                                             Add to Cart
@@ -223,6 +215,7 @@ if (isset($_GET['id'])) {
 
 <script>
     $(document).ready(function() {
+
         $(".form-control").keyup(function() {
             var value = $(this).val();
             value = value.replace(/^(0*)/, "");
@@ -247,6 +240,7 @@ if (isset($_GET['id'])) {
             });
 
         });
+
 
         function withRef() {
             $("body").load("detail-product.php?id=<?php echo $id; ?>");
