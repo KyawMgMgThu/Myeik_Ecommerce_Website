@@ -19,7 +19,7 @@ if (isset($_SESSION['user_id'])) {
 <html>
 
 <head>
-    <title>Myeik Freshcery | Groceries Organic Store</title>
+    <title>MyeikFreshcery | Groceries Organic Store</title>
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link href="https://fonts.googleapis.com/css?family=Montserrat:400,700" rel="stylesheet" type="text/css">

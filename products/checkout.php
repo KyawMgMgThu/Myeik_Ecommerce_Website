@@ -1,7 +1,6 @@
 <?php
 
 if (!isset($_SERVER['HTTP_REFERER'])) {
-    // redirect them to your desired location
     header('location: http://localhost:8000/');
     exit;
 }
@@ -15,69 +14,55 @@ if (!isset($_SESSION['username'])) {
     echo "<script> window.location.href='" . APPURL . "'; </script>";
 }
 
+try {
+    $products = $conn->prepare("SELECT * FROM cart WHERE user_id=:user_id");
+    $products->bindParam(':user_id', $_SESSION['user_id'], PDO::PARAM_INT);
+    $products->execute();
+    $allProducts = $products->fetchAll(PDO::FETCH_OBJ);
 
-
-
-$products = $conn->query("SELECT * FROM cart WHERE user_id='$_SESSION[user_id]'");
-$products->execute();
-
-$allProducts = $products->fetchAll(PDO::FETCH_OBJ);
-
-if (isset($_SESSION['price'])) {
-    $_SESSION['total_price'] = $_SESSION['price'] + 20;
-}
-
-if (isset($_POST['submit'])) {
-
-    if (
-        empty($_POST['name']) or empty($_POST['lname']) or empty($_POST['company_name'])
-        or empty($_POST['address']) or empty($_POST['city']) or empty($_POST['country'])
-        or empty($_POST['zip_code']) or empty($_POST['email']) or empty($_POST['phone_number'])
-        or empty($_POST['order_notes'])
-    ) {
-
-        echo "<script>alert('one or more inputs are empty')</script>";
-    } else {
-
-
-        $name = $_POST['name'];
-        $lname = $_POST['lname'];
-        $company_name = $_POST['company_name'];
-        $address = $_POST['address'];
-        $city = $_POST['city'];
-        $country = $_POST['country'];
-        $zip_code = $_POST['zip_code'];
-        $email = $_POST['email'];
-        $phone_number = $_POST['phone_number'];
-        $order_notes = $_POST['order_notes'];
-        $price = $_SESSION['total_price'];
-        $user_id = $_SESSION['user_id'];
-
-        $insert = $conn->prepare("INSERT INTO orders(name, lname, company_name, address, city,
-           country, zip_code, email, phone_number, order_notes,  price, user_id)
-            VALUES(:name, :lname, :company_name, :address, :city, :country, :zip_code, :email, :phone_number,
-            :order_notes, :price, :user_id)");
-
-        $insert->execute([
-            ":name" => $name,
-            ":lname" => $lname,
-            ":company_name" => $company_name,
-            ":address" => $address,
-            ":city" => $city,
-            ":country" => $country,
-            ":zip_code" => $zip_code,
-            ":email" => $email,
-            ":phone_number" => $phone_number,
-            ":order_notes" => $order_notes,
-            ":price" => $price,
-            ":user_id" => $user_id,
-        ]);
-
-        echo "<script> window.location.href='" . APPURL . "/products/charge.php'; </script>";
+    if (isset($_SESSION['price'])) {
+        $_SESSION['total_price'] = $_SESSION['price'] + 500;
     }
+
+    if (isset($_POST['submit'])) {
+
+        if (
+            empty($_POST['name']) or empty($_POST['lname'])
+            or empty($_POST['address']) or empty($_POST['city'])
+            or  empty($_POST['phone_number'])
+            or empty($_POST['order_notes'])
+        ) {
+            echo "<script>alert('one or more inputs are empty')</script>";
+        } else {
+            $name = $_POST['name'];
+            $lname = $_POST['lname'];
+            $address = $_POST['address'];
+            $city = $_POST['city'];
+            $phone_number = $_POST['phone_number'];
+            $order_notes = $_POST['order_notes'];
+            $price = $_SESSION['total_price'];
+            $user_id = $_SESSION['user_id'];
+
+            $insert = $conn->prepare("INSERT INTO orders(name, lname, address, city, phone_number, order_notes, price, user_id)
+            VALUES(:name, :lname, :address, :city, :phone_number, :order_notes, :price, :user_id)");
+
+            $insert->execute([
+                ":name" => $name,
+                ":lname" => $lname,
+                ":address" => $address,
+                ":city" => $city,
+                ":phone_number" => $phone_number,
+                ":order_notes" => $order_notes,
+                ":price" => $price,
+                ":user_id" => $user_id,
+            ]);
+
+            header("Location: http://localhost:8000/products/charge.php");
+        }
+    }
+} catch (PDOException $e) {
+    echo "Error: " . $e->getMessage();
 }
-
-
 
 ?>
 <div id="page-content" class="page-content">
@@ -111,29 +96,14 @@ if (isset($_POST['submit'])) {
                                 </div>
                             </div>
                             <div class="form-group">
-                                <input class="form-control" placeholder="Company Name" type="text" name="company_name">
-                            </div>
-                            <div class="form-group">
                                 <textarea class="form-control" name="address" placeholder="Address"></textarea>
                             </div>
                             <div class="form-group">
                                 <input class="form-control" name="city" placeholder="Town / City" type="text">
                             </div>
                             <div class="form-group">
-                                <input class="form-control" name="country" placeholder="State / Country" type="text">
+                                <input class="form-control" name="phone_number" placeholder="Phone Number" type="tel">
                             </div>
-                            <div class="form-group">
-                                <input class="form-control" name="zip_code" placeholder="Postcode / Zip" type="text">
-                            </div>
-                            <div class="form-group row">
-                                <div class="col">
-                                    <input class="form-control" name="email" placeholder="Email Address" type="email">
-                                </div>
-                                <div class="col">
-                                    <input class="form-control" name="phone_number" placeholder="Phone Number" type="tel">
-                                </div>
-                            </div>
-
                             <div class="form-group">
                                 <textarea class="form-control" name="order_notes" placeholder="Order Notes"></textarea>
                             </div>
@@ -183,7 +153,7 @@ if (isset($_POST['submit'])) {
                                             <strong>Shipping</strong>
                                         </td>
                                         <td class="text-right">
-                                            Ks 20
+                                            Ks 500
                                         </td>
                                     </tr>
                                     <tr>
@@ -191,7 +161,7 @@ if (isset($_POST['submit'])) {
                                             <strong>ORDER TOTAL</strong>
                                         </td>
                                         <td class="text-right">
-                                            <strong>Ks <?php echo $_SESSION['price'] + 20; ?></strong>
+                                            <strong>Ks <?php echo $_SESSION['price'] + 500; ?></strong>
                                         </td>
                                     </tr>
                                 </tfooter>

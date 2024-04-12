@@ -116,16 +116,12 @@ VALUES (
 --
 
 CREATE TABLE `orders` (
-    `id` int(3) NOT NULL,
+    `id` int primary key auto_increment,
     `name` varchar(200) NOT NULL,
     `lname` varchar(200) NOT NULL,
-    `company_name` varchar(200) NOT NULL,
     `address` varchar(200) NOT NULL,
     `city` varchar(200) NOT NULL,
-    `country` varchar(200) NOT NULL,
-    `zip_code` int(20) NOT NULL,
-    `email` varchar(200) NOT NULL,
-    `phone_number` int(20) NOT NULL,
+    `phone_number` varchar(30) NOT NULL,
     `order_notes` text NOT NULL,
     `status` varchar(200) NOT NULL DEFAULT 'sent to admins',
     `price` int(20) NOT NULL,
