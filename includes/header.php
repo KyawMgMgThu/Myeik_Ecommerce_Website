@@ -80,8 +80,8 @@ if (isset($_SESSION['user_id'])) {
                                 </div>
                             </li>
                             <li class="nav-item">
-                                <a href="../products/cart.php" class="nav-link" data-toggle="" aria-haspopup="true" aria-expanded="false">
-                                    <i class="fa fa-shopping-basket"></i> <span class="badge badge-primary">5</span>
+                                <a href="<?php echo APPURL; ?>/products/cart.php" class="nav-link" data-toggle="" aria-haspopup="true" aria-expanded="false">
+                                    <i class="fa fa-shopping-basket"></i> <span class="badge badge-primary"><?php echo $num->num_products; ?></span>
                                 </a>
 
                             </li>
