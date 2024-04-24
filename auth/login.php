@@ -1,6 +1,6 @@
 <?php
-$return = password_verify('minthu789', '$2y$10$2BWXP1MObtiNMQ24MI4jKOPFANm/eSak2OWoet/Ifn0GDpYyKzxO2');
-var_export($return);
+//$return = password_verify('minthu789', '$2y$10$2BWXP1MObtiNMQ24MI4jKOPFANm/eSak2OWoet/Ifn0GDpYyKzxO2');
+//var_export($return);
 session_start();
 require "../config/config.php";
 $error = '';
