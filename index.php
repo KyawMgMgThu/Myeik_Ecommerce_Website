@@ -140,7 +140,7 @@ $allCategories = $categories->fetchAll(PDO::FETCH_OBJ);
                 </div>
 
                 <div class="col-md-12 mt-5 text-center">
-                    <a href="shop.html" class="btn btn-primary btn-lg">SHOP NOW</a>
+                    <a href="shop.php" class="btn btn-primary btn-lg">SHOP NOW</a>
                 </div>
             </div>
         </div>
