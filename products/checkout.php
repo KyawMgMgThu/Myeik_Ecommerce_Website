@@ -57,7 +57,7 @@ try {
                 ":user_id" => $user_id,
             ]);
 
-            header("Location: http://localhost:8000/products/charge.php");
+            echo "<script> window.location.href='" . APPURL . "/products/charge.php'; </script>";
         }
     }
 } catch (PDOException $e) {

@@ -2,9 +2,12 @@
 <?php require "../config/config.php"; ?>
 <?php
 
-if (!isset($_SESSION['username'])) {
-    header("Location: http://localhost:8000/");
+if (!isset($_SERVER['HTTP_REFERER'])) {
+
+    header('location: http://localhost:8000/index.php');
+    exit;
 }
+
 
 $products = $conn->query("SELECT * FROM cart WHERE user_id='$_SESSION[user_id]'");
 $products->execute();

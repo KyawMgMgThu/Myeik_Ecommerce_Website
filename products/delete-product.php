@@ -1,10 +1,11 @@
 <?php
 
 if (!isset($_SERVER['HTTP_REFERER'])) {
-    // redirect them to your desired location
-    header('location: http://localhost/freshcery/index.php');
+
+    header('location: http://localhost:8000/index.php');
     exit;
 }
+
 
 ?>
 <?php require "../includes/header.php"; ?>
