@@ -6,6 +6,9 @@ if (!isset($_SERVER['HTTP_REFERER'])) {
     exit;
 }
 
+if (isset($_POST['submit'])) {
+    echo "<script> window.location.href='" . APPURL . "/products/success.php'; </script>";
+}
 
 ?>
 
@@ -29,11 +32,16 @@ if (!isset($_SESSION['username'])) {
             Save time and leave the groceries to us.
         </p>
     </div>
-    <!-- Replace "test" with your own sandbox Business account app client ID -->
-    <script src="https://www.paypal.com/sdk/js?client-id=test&currency=USD"></script>
+    <!-- Replace "test" with your own sandbox Business account app client ID 
+    <script src="https://www.paypal.com/sdk/js?client-id=test&currency=USD"></script>-->
     <!-- Set up a container element for the button -->
-    <div id="paypal-button-container"></div>
-    <script>
+    <div id="paypal-button-container">
+
+    </div>
+    <form action="success.php" method="post">
+        <button name="submit" type="submit" class="btn btn-primary float-left">PROCEED TO CHECKOUT <i class="fa fa-check"></i></button>
+    </form>
+    <!-- <script>
         paypal.Buttons({
             // Sets up the transaction when a payment button is clicked
             createOrder: (data, actions) => {
@@ -60,7 +68,7 @@ if (!isset($_SESSION['username'])) {
                 });
             }
         }).render('#paypal-button-container');
-    </script>
+    </script> -->
 
 
 

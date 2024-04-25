@@ -170,9 +170,7 @@ try {
 
 
                     </div>
-                    <!-- <p class="text-right mt-3">
-                            <input checked="" type="checkbox"> I’ve read &amp; accept the <a href="#">terms &amp; conditions</a>
-                        </p> -->
+
                     <div class="clearfix">
                     </div>
                 </div>
