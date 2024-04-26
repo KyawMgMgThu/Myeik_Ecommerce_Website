@@ -8,11 +8,11 @@ create table Users (
     create_at Timestamp
 );
 CREATE TABLE `admins` (
-    `id` int(3) NOT NULL,
+    `id` int(3) auto_increment primary key,
     `adminname` varchar(200) NOT NULL,
     `email` varchar(200) NOT NULL,
     `mypassword` varchar(200) NOT NULL,
-    `created_at` timestamp NOT NULL DEFAULT current_timestamp()
+    `created_at` timestamp
 );
 --
 -- Dumping data for table `admins`
