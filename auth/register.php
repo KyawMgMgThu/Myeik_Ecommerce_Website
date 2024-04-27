@@ -2,32 +2,43 @@
 session_start();
 require "../config/config.php";
 $error = '';
+
 if (isset($_SESSION['username'])) {
     header("Location: http://localhost:8000/");
+    exit();
 }
 
 if (isset($_POST['submit'])) {
     if (empty($_POST['fullname']) || empty($_POST['email']) || empty($_POST['username'])) {
         $error = 'One or more inputs are empty';
-        echo "<script>alert($error)</script>";
+        echo "<script>alert('$error')</script>";
     } elseif ($_POST['password'] != $_POST['confirm_password']) {
         $error = 'Passwords do not match';
-        echo "<script>alert($error)</script>";
+        echo "<script>alert('$error')</script>";
     } else {
         $hashed_password = password_hash($_POST['password'], PASSWORD_DEFAULT);
 
         $fullname = $_POST['fullname'];
         $email = $_POST['email'];
         $username = $_POST['username'];
-        $image = "logo.png";
-
+        $image = time() . $_FILES['image']['name'];
+        $tmp = $_FILES['image']['tmp_name'];
+        move_uploaded_file($tmp, $_SERVER['DOCUMENT_ROOT'] . '/assets/img/profile/' . $image);
+        $target_file = $_SERVER['DOCUMENT_ROOT'] . '/assets/img/profile/' . $image;
+        $imageFileType = strtolower(pathinfo($target_file, PATHINFO_EXTENSION));
+        $picname = basename($_FILES['image']['name']);
+        $image = time() . $picname;
+        if ($imageFileType != "jpg" && $imageFileType != "jpeg" && $imageFileType != "png") {
+            echo "<script>alert('Please upload photo having extension .jpg/.jpeg/.png');</script>";
+        } else if ($_FILES["image"]["size"] > 20000000) {
+            echo "<script>alert('your photo exceed the size of 2 MB');</script>";
+        }
         $insert = $conn->prepare("INSERT INTO Users (fullname, email, username, mypassword, image) 
                                   VALUES (:fullname, :email, :username, :password, :image)");
 
         $insert->bindParam(":fullname", $fullname);
         $insert->bindParam(":email", $email);
         $insert->bindParam(":username", $username);
-        $insert->bindParam(":fullname", $fullname);
         $insert->bindParam(":password", $hashed_password);
         $insert->bindParam(":image", $image);
 
@@ -57,8 +68,8 @@ if (isset($_POST['submit'])) {
 
                 <div class="card card-login mb-5">
                     <div class="card-body">
-                        <form class="form-horizontal" method="POST" action="register.php">
-                            <div class="form-group row mt-3">
+                        <form class="form-horizontal" method="POST" action="register.php" enctype="multipart/form-data">
+                            <div class=" form-group row mt-3">
                                 <div class="col-md-12">
                                     <input class="form-control" name="fullname" type="text" required="" placeholder="Full Name">
                                 </div>
@@ -82,6 +93,11 @@ if (isset($_POST['submit'])) {
                             <div class="form-group row">
                                 <div class="col-md-12">
                                     <input class="form-control" type="password" name="confirm_password" required="" placeholder="Confirm Password">
+                                </div>
+                            </div>
+                            <div class="form-group row">
+                                <div class="col-md-12">
+                                    <input class="form-control" type="file" name="image" required="">
                                 </div>
                             </div>
                             <div class="form-group row">

@@ -72,7 +72,7 @@ if (isset($_SESSION['user_id'])) {
                         <?php else : ?>
                             <li class="nav-item dropdown">
                                 <a class="nav-link dropdown-toggle" href="javascript:void(0)" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    <div class="avatar-header"><img src="<?php echo APPURL; ?>/assets/img/logo/<?php echo $_SESSION['image']; ?>"></div> <?php echo $_SESSION['username']; ?>
+                                    <div class="avatar-header"><img src="<?php echo APPURL; ?>/assets/img/profile/<?php echo $_SESSION['image']; ?>"></div> <?php echo $_SESSION['username']; ?>
                                 </a>
                                 <div class="dropdown-menu" aria-labelledby="navbarDropdown">
                                     <a class="dropdown-item" href="<?php echo APPURL; ?>/users/transaction.php?id=<?php echo $_SESSION['user_id']; ?>">Transactions History</a>
