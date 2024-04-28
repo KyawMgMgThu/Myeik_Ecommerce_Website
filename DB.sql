@@ -167,7 +167,7 @@ VALUES (
         '2022-12-14 12:47:47'
     );
 CREATE TABLE `products` (
-    `id` int(3) NOT NULL,
+    `id` int(3) primary key AUTO_INCREMENT,
     `title` varchar(200) NOT NULL,
     `description` text NOT NULL,
     `price` varchar(10) NOT NULL,
@@ -175,8 +175,8 @@ CREATE TABLE `products` (
     `image` varchar(200) NOT NULL,
     `exp_date` varchar(200) NOT NULL,
     `category_id` int(3) NOT NULL,
-    `status` int(1) NOT NULL DEFAULT 1,
-    `created_at` timestamp NOT NULL DEFAULT current_timestamp(),
+    `status` int(1) DEFAULT 1,
+    `created_at` timestamp DEFAULT current_timestamp(),
     Foreign key (category_id) references categories(id)
 );
 INSERT INTO `products` (
